@@ -40,6 +40,9 @@ layout(std140, binding = 0) uniform ubuf {
     float horizontalSync;
     float horizontalSyncStrength;
     float flickering;
+    float audioVisualizerLevel;
+    float audioVisualizerPulse;
+    float audioVisualizerSweep;
     vec2 scaleNoiseSize;
     float frameShininess;
     float frameSize;
@@ -144,10 +147,13 @@ void main() {
     vec4 noiseTexel = texture(noiseSource, scaleNoiseSize * coords + vec2(fract(time / 0.051), fract(time / 0.237)));
 
     vec2 txt_coords = coords + (noiseTexel.ba - vec2(0.5)) * jitterDisplacement * jitter;
+    float visualizerBand = 0.5 + 0.5 * sin(qt_TexCoord0.y * 36.0 + time * (5.0 + audioVisualizerSweep * 7.0));
+    float visualizerAccent = audioVisualizerLevel * mix(0.15, 0.45, visualizerBand);
 
     float color = 0.0001;
     color += noiseTexel.a * staticNoise * (1.0 - distance * 1.3);
     color += randomPass(coords * virtualResolution) * glowingLine;
+    color += visualizerAccent * (0.2 + audioVisualizerPulse * 0.25);
 
 #if CRT_DISPLAY_FRAME == 1
     vec4 frameColor = texture(frameSource, qt_TexCoord0);
@@ -166,6 +172,7 @@ void main() {
 #endif
 
     txt_color += vec3(color);
+    txt_color += fontColor.rgb * visualizerAccent * 0.3;
     txt_color = applyRasterization(staticCoords, txt_color, virtualResolution, rasterizationIntensity);
 
     vec3 finalColor = convertWithChroma(txt_color);

@@ -9,6 +9,9 @@
         <file>SettingsGeneralTab.qml</file>
         <file>PreprocessedTerminal.qml</file>
         <file>TimeManager.qml</file>
+        <file>MusicPlayer.qml</file>
+        <file>MusicBackendQtMultimedia.qml</file>
+        <file>MusicPlayerPanel.qml</file>
         <file>SimpleSlider.qml</file>
         <file>ColorButton.qml</file>
         <file>AboutDialog.qml</file>

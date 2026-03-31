@@ -32,6 +32,10 @@ QtObject {
         enableTimer: windowsModel.count > 0
     }
 
+    property MusicPlayer musicPlayer: MusicPlayer {
+        timeDriver: timeManager
+    }
+
     property SettingsWindow settingsWindow: SettingsWindow {
         visible: false
     }

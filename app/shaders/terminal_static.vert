@@ -12,6 +12,9 @@ layout(std140, binding = 0) uniform ubuf {
     float frameSize;
     float screen_brightness;
     float bloom;
+    float audioVisualizerLevel;
+    float audioVisualizerPulse;
+    float audioVisualizerSweep;
 };
 
 layout(location = 0) out vec2 qt_TexCoord0;

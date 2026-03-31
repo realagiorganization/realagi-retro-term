@@ -41,6 +41,9 @@ ShaderTerminal {
         terminalWindow.height * Screen.devicePixelRatio * appSettings.windowScaling
     )
     bloomSource: bloomSourceLoader.item
+    audioVisualizerLevel: appRoot.musicPlayer.visualizerLevel
+    audioVisualizerPulse: appRoot.musicPlayer.visualizerPulse
+    audioVisualizerSweep: appRoot.musicPlayer.visualizerSweep
 
     PreprocessedTerminal {
         id: terminal

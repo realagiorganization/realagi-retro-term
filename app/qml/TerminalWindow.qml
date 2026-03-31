@@ -20,6 +20,7 @@
 import QtQuick
 import QtQuick.Window
 import QtQuick.Controls
+import QtQuick.Dialogs
 
 import "menus"
 
@@ -40,6 +41,7 @@ ApplicationWindow {
     visible: false
 
     property bool fullscreen: false
+    property bool showMusicPanel: false
     onFullscreenChanged: visibility = (fullscreen ? Window.FullScreen : Window.Windowed)
 
     menuBar: WindowMenu { }
@@ -123,6 +125,33 @@ ApplicationWindow {
         shortcut: appSettings.isMacOS ? "Meta+W" : "Ctrl+Shift+W"
         onTriggered: terminalTabs.closeTab(terminalTabs.currentIndex)
     }
+    Action {
+        id: openAudioAction
+        text: qsTr("Open Audio")
+        shortcut: appSettings.isMacOS ? "Meta+Alt+O" : "Ctrl+Alt+O"
+        onTriggered: {
+            showMusicPanel = true
+            musicPlayerPanel.openFileDialog()
+        }
+    }
+    Action {
+        id: togglePlaybackAction
+        text: appRoot.musicPlayer.isPlaying ? qsTr("Pause Audio") : qsTr("Play Audio")
+        shortcut: appSettings.isMacOS ? "Meta+Alt+P" : "Ctrl+Alt+P"
+        onTriggered: appRoot.musicPlayer.togglePlayback()
+    }
+    Action {
+        id: stopPlaybackAction
+        text: qsTr("Stop Audio")
+        shortcut: appSettings.isMacOS ? "Meta+Alt+S" : "Ctrl+Alt+S"
+        onTriggered: appRoot.musicPlayer.stopPlayback()
+    }
+    Action {
+        id: toggleMusicPanelAction
+        text: showMusicPanel ? qsTr("Hide Music Player") : qsTr("Show Music Player")
+        shortcut: appSettings.isMacOS ? "Meta+Alt+M" : "Ctrl+Alt+M"
+        onTriggered: showMusicPanel = !showMusicPanel
+    }
     Shortcut {
         sequence: appSettings.isMacOS ? "Meta+1" : "Alt+1"
         context: Qt.WindowShortcut
@@ -180,6 +209,16 @@ ApplicationWindow {
             z: 3
             terminalSize: terminalTabs.terminalSize
         }
+    }
+    MusicPlayerPanel {
+        id: musicPlayerPanel
+        z: 4
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.margins: 18
+        visible: showMusicPanel
+        player: appRoot.musicPlayer
+        onDismissed: showMusicPanel = false
     }
     onClosing: {
         appRoot.closeWindow(terminalWindow)

@@ -23,6 +23,9 @@ layout(std140, binding = 0) uniform ubuf {
     float horizontalSync;
     float horizontalSyncStrength;
     float flickering;
+    float audioVisualizerLevel;
+    float audioVisualizerPulse;
+    float audioVisualizerSweep;
     vec2 scaleNoiseSize;
     float frameShininess;
     float frameSize;

@@ -25,6 +25,9 @@ layout(std140, binding = 0) uniform ubuf {
     float frameSize;
     float screen_brightness;
     float bloom;
+    float audioVisualizerLevel;
+    float audioVisualizerPulse;
+    float audioVisualizerSweep;
 };
 
 layout(binding = 1) uniform sampler2D source;
@@ -83,6 +86,10 @@ void main() {
     float bloomScale = 1.0 + max(bloom, 0.0);
     finalColor /= bloomScale;
 #endif
+
+    float visualizerLine = 0.5 + 0.5 * sin(qt_TexCoord0.y * 42.0 + audioVisualizerSweep * 6.28318530718);
+    float visualizerMask = pow(visualizerLine, 2.0) * audioVisualizerLevel;
+    finalColor += bloomColor * visualizerMask * (0.08 + audioVisualizerPulse * 0.12);
 
 #if CRT_FRAME_SHININESS == 1
     vec3 reflectionColor = mix(bloomColor * bloomAlpha * 2.0, finalColor, frameShininess * 0.5);

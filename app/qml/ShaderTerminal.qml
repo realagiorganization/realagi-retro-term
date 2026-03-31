@@ -53,6 +53,9 @@ Item {
 
     property color fontColor: appSettings.fontColor
     property color backgroundColor: appSettings.backgroundColor
+    property real audioVisualizerLevel: 0
+    property real audioVisualizerPulse: 0
+    property real audioVisualizerSweep: 0
 
     property real screenCurvature: appSettings.screenCurvature * appSettings.screenCurvatureSize * terminalWindow.normalizedWindowScale
     property real frameSize: appSettings.frameSize * terminalWindow.normalizedWindowScale
@@ -78,23 +81,26 @@ Item {
 
         property color fontColor: parent.fontColor
         property color backgroundColor: parent.backgroundColor
+        property real audioVisualizerLevel: parent.audioVisualizerLevel
+        property real audioVisualizerPulse: parent.audioVisualizerPulse
+        property real audioVisualizerSweep: parent.audioVisualizerSweep
         property real screenCurvature: parent.screenCurvature
         property real chromaColor: parent.chromaColor
         property real ambientLight: parent.ambientLight
 
-        property real flickering: appSettings.flickering
+        property real flickering: appSettings.flickering + audioVisualizerPulse * 0.12
         property real horizontalSync: appSettings.horizontalSync
         property real horizontalSyncStrength: Utils.lint(0.05, 0.35, horizontalSync)
-        property real glowingLine: appSettings.glowingLine * 0.2
+        property real glowingLine: appSettings.glowingLine * 0.2 + audioVisualizerLevel * 0.25
 
         // Fast burnin properties
         property real burnIn: appSettings.burnIn
         property real burnInLastUpdate: burnInEffect.lastUpdate
         property real burnInTime: burnInEffect.burnInFadeTime
 
-        property real jitter: appSettings.jitter
+        property real jitter: appSettings.jitter + audioVisualizerPulse * 0.05
         property size jitterDisplacement: Qt.size(0.007 * jitter, 0.002 * jitter)
-        property real staticNoise: appSettings.staticNoise
+        property real staticNoise: appSettings.staticNoise + audioVisualizerLevel * 0.05
         property size scaleNoiseSize: Qt.size((width * 0.75) / (noiseTexture.width * appSettings.windowScaling * appSettings.totalFontScaling),
                                               (height * 0.75) / (noiseTexture.height * appSettings.windowScaling * appSettings.totalFontScaling))
 
@@ -170,13 +176,16 @@ Item {
 
         property color fontColor: parent.fontColor
         property color backgroundColor: parent.backgroundColor
-        property real bloom: bloomSource ? appSettings.bloom * 2.5 : 0
+        property real audioVisualizerLevel: parent.audioVisualizerLevel
+        property real audioVisualizerPulse: parent.audioVisualizerPulse
+        property real audioVisualizerSweep: parent.audioVisualizerSweep
+        property real bloom: bloomSource ? appSettings.bloom * 2.5 + audioVisualizerLevel * 0.9 : 0
 
         property real screenCurvature: parent.screenCurvature
 
         property real chromaColor: appSettings.chromaColor;
 
-        property real rgbShift: appSettings.rgbShift * (4.0 / width) * appSettings.totalFontScaling
+        property real rgbShift: (appSettings.rgbShift + audioVisualizerPulse * 0.03) * (4.0 / width) * appSettings.totalFontScaling
 
         property real screen_brightness: Utils.lint(0.5, 1.5, appSettings.brightness)
         property real frameShininess: appSettings.frameShininess

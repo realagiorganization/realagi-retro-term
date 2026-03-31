@@ -52,6 +52,14 @@ MenuBar {
         MenuItem { action: zoomOut }
     }
     Menu {
+        title: qsTr("Media")
+        MenuItem { action: openAudioAction }
+        MenuItem { action: togglePlaybackAction }
+        MenuItem { action: stopPlaybackAction }
+        MenuSeparator { }
+        MenuItem { action: toggleMusicPanelAction }
+    }
+    Menu {
         id: profilesMenu
         title: qsTr("Profiles")
         Instantiator {
