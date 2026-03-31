@@ -5,7 +5,7 @@ set -x
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd -P)"
 OLD_CWD="$(pwd -P)"
 BUILD_DIR="$REPO_ROOT/build/dmg"
-APP="cool-retro-term.app"
+APP="realagi-retro-term.app"
 QML_DIR="$REPO_ROOT/app/qml"
 JOBS="${JOBS:-$(sysctl -n hw.ncpu 2>/dev/null || echo 4)}"
 VERSION="$(git -C "$REPO_ROOT" describe --tags --always --dirty=-dirty 2>/dev/null || true)"
@@ -24,7 +24,7 @@ mkdir -p "$BUILD_DIR"
 rm -f "$BUILD_DIR/${APP%.app}.dmg"
 pushd "$BUILD_DIR"
 
-"$QT_BIN/qmake" CONFIG+=release "$REPO_ROOT/cool-retro-term.pro"
+"$QT_BIN/qmake" CONFIG+=release "$REPO_ROOT/realagi-retro-term.pro"
 make -j"$JOBS"
 
 PLUGIN_DST="$APP/Contents/PlugIns/qmltermwidget"

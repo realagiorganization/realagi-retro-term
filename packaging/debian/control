@@ -1,17 +1,17 @@
-Source: cool-retro-term
+Source: realagi-retro-term
 Maintainer: Jeka Der <jekader@gmail.com>
 Section: x11
 Priority: optional
 Standards-Version: 3.9.6
-Homepage: https://github.com/Swordfish90/cool-retro-term
-Vcs-Git: git://github.com/barak/cool-retro-term.git
-Vcs-Browser: https://github.com/barak/cool-retro-term
+Homepage: https://github.com/realagiorganization/realagi-retro-term
+Vcs-Git: https://github.com/realagiorganization/realagi-retro-term.git
+Vcs-Browser: https://github.com/realagiorganization/realagi-retro-term
 Build-Depends: debhelper (>= 9), qmlscene,
  qt5-qmake, qtdeclarative5-dev, qml-module-qtquick-controls,
  qml-module-qtgraphicaleffects, qml-module-qtquick-dialogs,
  qml-module-qtquick-localstorage, qml-module-qtquick-window2
 
-Package: cool-retro-term
+Package: realagi-retro-term
 Architecture: any
 Replaces: cool-old-term
 Provides: x-terminal-emulator
@@ -19,6 +19,6 @@ Depends: qml-module-qtquick-controls, qml-module-qtgraphicaleffects,
  qml-module-qtquick-dialogs, qml-module-qtquick-localstorage,
  qml-module-qtquick-window2, ${shlibs:Depends}, ${misc:Depends}
 Description: terminal emulator which mimics old screens
- cool-retro-term is a terminal emulator which mimics the look and feel
+ realagi-retro-term is a terminal emulator which mimics the look and feel
  of the old cathode tube screens. It has been designed to be eye-candy,
  customizable, and reasonably lightweight.

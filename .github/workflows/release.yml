@@ -47,7 +47,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: cool-retro-term-appimage
+          name: realagi-retro-term-appimage
           path: ./release/*
 
   build-dmg:
@@ -80,7 +80,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: cool-retro-term-dmg
+          name: realagi-retro-term-dmg
           path: ./release/*
 
   release:
@@ -97,13 +97,13 @@ jobs:
       - name: Download AppImage
         uses: actions/download-artifact@v4
         with:
-          name: cool-retro-term-appimage
+          name: realagi-retro-term-appimage
           path: ./release
 
       - name: Download DMG
         uses: actions/download-artifact@v4
         with:
-          name: cool-retro-term-dmg
+          name: realagi-retro-term-dmg
           path: ./release
 
       - name: Update rolling tag

@@ -1,10 +1,10 @@
 /*******************************************************************************
 * Copyright (c) 2013-2021 "Filippo Scognamiglio"
-* https://github.com/Swordfish90/cool-retro-term
+* https://github.com/realagiorganization/realagi-retro-term
 *
-* This file is part of cool-retro-term.
+* This file is part of realagi-retro-term.
 *
-* cool-retro-term is free software: you can redistribute it and/or modify
+* realagi-retro-term is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
@@ -117,7 +117,7 @@ Item{
         fullCursorHeight: true
         blinkingCursor: appSettings.blinkingCursor
 
-        colorScheme: "cool-retro-term"
+        colorScheme: "realagi-retro-term"
 
         session: QMLTermSession {
             id: ksession

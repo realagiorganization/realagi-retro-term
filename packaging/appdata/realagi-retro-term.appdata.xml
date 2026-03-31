@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2014 Markus S. <kamikazow@web.de> -->
 <component type="desktop">
-  <id>cool-retro-term.desktop</id>
+  <id>realagi-retro-term.desktop</id>
   <metadata_license>MIT</metadata_license>
   <project_license>GPL-3.0+</project_license>
-  <name>Cool Retro Term</name>
+  <name>Realagi Retro Term</name>
   <summary>Terminal emulator with an old school look and feel</summary>
 
   <description>
     <p>
-      cool-retro-term is a terminal emulator which tries to mimic the look and feel of the old cathode tube screens. It has been designed to be eye-candy, customizable, and reasonably lightweight.
+      realagi-retro-term is a terminal emulator which tries to mimic the look and feel of the old cathode tube screens. It has been designed to be eye-candy, customizable, and reasonably lightweight.
     </p>
   </description>
 
@@ -24,10 +24,10 @@
     </screenshot>
   </screenshots>
 
-  <url type="homepage">https://github.com/Swordfish90/cool-retro-term</url>
+  <url type="homepage">https://github.com/realagiorganization/realagi-retro-term</url>
 
   <provides>
-    <binary>cool-retro-term</binary>
+    <binary>realagi-retro-term</binary>
   </provides>
 
   <releases>

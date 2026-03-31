@@ -1,10 +1,10 @@
 /*******************************************************************************
 * Copyright (c) 2013-2021 "Filippo Scognamiglio"
-* https://github.com/Swordfish90/cool-retro-term
+* https://github.com/realagiorganization/realagi-retro-term
 *
-* This file is part of cool-retro-term.
+* This file is part of realagi-retro-term.
 *
-* cool-retro-term is free software: you can redistribute it and/or modify
+* realagi-retro-term is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
@@ -26,7 +26,7 @@ Item {
     id: tabsRoot
 
     readonly property int innerPadding: 6
-    readonly property string currentTitle: tabsModel.get(currentIndex).title ?? "cool-retro-term"
+    readonly property string currentTitle: tabsModel.get(currentIndex).title ?? "realagi-retro-term"
     property alias currentIndex: tabBar.currentIndex
     readonly property int count: tabsModel.count
     property size terminalSize: Qt.size(0, 0)

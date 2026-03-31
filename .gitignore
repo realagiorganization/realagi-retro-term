@@ -43,7 +43,7 @@ Makefile*
 # Excludes compiled files
 
 imports
-cool-retro-term
+realagi-retro-term
 build
 
 # Linux

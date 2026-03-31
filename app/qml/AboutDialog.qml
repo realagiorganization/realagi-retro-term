@@ -1,10 +1,10 @@
 /*******************************************************************************
 * Copyright (c) 2013-2021 "Filippo Scognamiglio"
-* https://github.com/Swordfish90/cool-retro-term
+* https://github.com/realagiorganization/realagi-retro-term
 *
-* This file is part of cool-retro-term.
+* This file is part of realagi-retro-term.
 *
-* cool-retro-term is free software: you can redistribute it and/or modify
+* realagi-retro-term is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
 * the Free Software Foundation, either version 3 of the License, or
 * (at your option) any later version.
@@ -34,7 +34,7 @@ ApplicationWindow {
         spacing: 15
         Text {
             Layout.alignment: Qt.AlignHCenter
-            text: "cool-retro-term"
+            text: "realagi-retro-term"
             color: palette.text
             font {
                 bold: true
@@ -103,7 +103,8 @@ ApplicationWindow {
                 text: appSettings.version + "\n" + qsTr(
                           "Author: ") + "Filippo Scognamiglio\n" + qsTr(
                           "Email: ") + "flscogna@gmail.com\n" + qsTr(
-                          "Source: ") + "https://github.com/Swordfish90/cool-retro-term\n"
+                          "Source: ") + "https://github.com/realagiorganization/realagi-retro-term\n"
+                          + qsTr("Upstream: ") + "https://github.com/Swordfish90/cool-retro-term\n"
             }
         }
     }
@@ -117,8 +118,9 @@ ApplicationWindow {
                 wrapMode: TextEdit.Wrap
                 color: palette.text
                 text: "Copyright (c) 2013-2025 Filippo Scognamiglio <flscogna@gmail.com>\n\n"
-                      + "https://github.com/Swordfish90/cool-retro-term\n\n" +
-                      "cool-retro-term is free software: you can redistribute it and/or modify "
+                      + "https://github.com/realagiorganization/realagi-retro-term\n"
+                      + "Forked from https://github.com/Swordfish90/cool-retro-term\n\n" +
+                      "realagi-retro-term is free software: you can redistribute it and/or modify "
                       + "it under the terms of the GNU General Public License as published by "
                       + "the Free Software Foundation, either version 3 of the License, or "
                       + "(at your option) any later version.\n\n" +
