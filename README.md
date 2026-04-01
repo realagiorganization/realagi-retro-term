@@ -31,3 +31,16 @@ Build instructions still track the upstream wiki for now:
 
 - Linux: <https://github.com/Swordfish90/cool-retro-term/wiki/Build-Instructions-(Linux)>
 - macOS: <https://github.com/Swordfish90/cool-retro-term/wiki/Build-Instructions-(macOS)>
+
+### Local Linux quickstart
+
+For a Debian or Kali host with Qt 6 packages available:
+
+```bash
+sudo apt-get install -y build-essential pkg-config qmake6 qt6-base-dev qt6-declarative-dev qt6-5compat-dev qt6-shadertools-dev qt6-svg-dev
+git submodule update --init --recursive
+./scripts/build-local.sh
+./build/local/realagi-retro-term
+```
+
+The local build helper prefers `qmake6` and falls back to `qmake`, so it also works on environments where Qt 6 does not install a `qmake` alias.

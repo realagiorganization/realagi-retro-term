@@ -13,18 +13,22 @@ if [ -z "$VERSION" ]; then
     VERSION="unknown"
 fi
 
-if ! command -v qmake >/dev/null; then
-    echo "qmake not found in PATH." >&2
+if command -v qmake6 >/dev/null; then
+    QMAKE_BIN="$(command -v qmake6)"
+elif command -v qmake >/dev/null; then
+    QMAKE_BIN="$(command -v qmake)"
+else
+    echo "qmake6/qmake not found in PATH." >&2
     exit 1
 fi
-QT_DIR="${QT_DIR:-$(qmake -query QT_INSTALL_PREFIX)}"
+QT_DIR="${QT_DIR:-$($QMAKE_BIN -query QT_INSTALL_PREFIX)}"
 QT_BIN="${QT_DIR%/}/bin"
 
 mkdir -p "$BUILD_DIR"
 rm -f "$BUILD_DIR/${APP%.app}.dmg"
 pushd "$BUILD_DIR"
 
-"$QT_BIN/qmake" CONFIG+=release "$REPO_ROOT/realagi-retro-term.pro"
+"$QMAKE_BIN" CONFIG+=release "$REPO_ROOT/realagi-retro-term.pro"
 make -j"$JOBS"
 
 PLUGIN_DST="$APP/Contents/PlugIns/qmltermwidget"

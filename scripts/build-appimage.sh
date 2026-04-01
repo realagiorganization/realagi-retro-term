@@ -11,12 +11,16 @@ if [ -z "$VERSION" ]; then
     VERSION="unknown"
 fi
 
-if ! command -v qmake >/dev/null; then
-    echo "qmake not found in PATH." >&2
+if command -v qmake6 >/dev/null; then
+    QMAKE_BIN="$(command -v qmake6)"
+elif command -v qmake >/dev/null; then
+    QMAKE_BIN="$(command -v qmake)"
+else
+    echo "qmake6/qmake not found in PATH." >&2
     exit 1
 fi
-QTDIR="$(qmake -query QT_INSTALL_PREFIX)"
-QT_INSTALL_QML="$(qmake -query QT_INSTALL_QML)"
+QTDIR="$($QMAKE_BIN -query QT_INSTALL_PREFIX)"
+QT_INSTALL_QML="$($QMAKE_BIN -query QT_INSTALL_QML)"
 
 APPDIR="$BUILD_DIR/AppDir"
 
@@ -24,7 +28,7 @@ mkdir -p "$BUILD_DIR"
 rm -rf "$APPDIR"
 pushd "$BUILD_DIR"
 
-qmake "$REPO_ROOT/realagi-retro-term.pro"
+"$QMAKE_BIN" "$REPO_ROOT/realagi-retro-term.pro"
 make -j"$(nproc)"
 
 # Install targets from subprojects (the top-level install only installs the desktop file).
@@ -45,7 +49,6 @@ if [ -d "$QML_ROOT" ]; then
         QML_PARENT="$(dirname "$QML_PARENT")"
     done
 fi
-
 
 # Build AppImage using linuxdeploy and linuxdeploy-plugin-qt.
 mkdir -p "$TOOLS_DIR"
