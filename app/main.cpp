@@ -19,6 +19,7 @@
 #include <QLoggingCategory>
 
 #include <audioanalysis.h>
+#include <gamemusicrenderer.h>
 #include <fileio.h>
 #include <fontlistmodel.h>
 #include <fontmanager.h>
@@ -104,6 +105,7 @@ int main(int argc, char *argv[])
     FileIO fileIO;
 
     qmlRegisterType<AudioAnalysis>("RealagiRetroTerm", 1, 0, "AudioAnalysis");
+    qmlRegisterType<GameMusicRenderer>("RealagiRetroTerm", 1, 0, "GameMusicRenderer");
     qmlRegisterType<FontManager>("RealagiRetroTerm", 1, 0, "FontManager");
     qmlRegisterType<MidiRenderer>("RealagiRetroTerm", 1, 0, "MidiRenderer");
     qmlRegisterUncreatableType<FontListModel>("RealagiRetroTerm", 1, 0, "FontListModel", "FontListModel is created by FontManager");

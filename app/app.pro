@@ -1,4 +1,4 @@
-QT += qml quick widgets sql quickcontrols2
+QT += qml quick widgets sql quickcontrols2 concurrent
 TARGET = realagi-retro-term
 APP_VERSION = $$system(git -C $$PWD/.. describe --tags --always --dirty=-dirty)
 isEmpty(APP_VERSION): APP_VERSION = "unknown"
@@ -19,6 +19,7 @@ DESTDIR = $$OUT_PWD/../
 
 HEADERS += \
     audioanalysis.h \
+    gamemusicrenderer.h \
     fileio.h \
     fontmanager.h \
     fontlistmodel.h \
@@ -26,6 +27,7 @@ HEADERS += \
 
 SOURCES += main.cpp \
     audioanalysis.cpp \
+    gamemusicrenderer.cpp \
     fileio.cpp \
     fontmanager.cpp \
     fontlistmodel.cpp \
@@ -54,6 +56,8 @@ qsb.variable_out = QSB_FILES
 QMAKE_EXTRA_COMPILERS += qsb
 PRE_TARGETDEPS += $$QSB_FILES
 OTHER_FILES += $$SHADERS $$QSB_FILES
+
+LIBS += -lgme
 
 DYNAMIC_SHADER = $$SHADERS_DIR/terminal_dynamic.frag
 STATIC_SHADER = $$SHADERS_DIR/terminal_static.frag

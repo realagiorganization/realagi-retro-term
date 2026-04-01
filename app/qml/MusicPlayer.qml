@@ -9,6 +9,7 @@ QtObject {
     property string backendError: ""
     property url selectedSource: ""
     readonly property bool selectedSourceIsMidi: midiRenderer.isMidiFile(selectedSource)
+    readonly property bool selectedSourceIsGameMusic: gameMusicRenderer.isGameMusicFile(selectedSource)
     readonly property bool backendAvailable: backend !== null
     readonly property bool hasSource: backend ? backend.hasSource : false
     readonly property bool isPlaying: backend ? backend.isPlaying : false
@@ -81,15 +82,24 @@ QtObject {
         selectedSource = selectedFile
         analysis.reset()
 
+        if (backend && backend.clearSource && (selectedSourceIsMidi || selectedSourceIsGameMusic)) {
+            backend.clearSource()
+        }
+
         if (selectedSourceIsMidi) {
-            if (backend && backend.clearSource) {
-                backend.clearSource()
-            }
+            gameMusicRenderer.reset()
             midiRenderer.render(selectedFile)
             return
         }
 
+        if (selectedSourceIsGameMusic) {
+            midiRenderer.reset()
+            gameMusicRenderer.render(selectedFile)
+            return
+        }
+
         midiRenderer.reset()
+        gameMusicRenderer.reset()
 
         if (backend) {
             openPlaybackSource(selectedFile)
@@ -105,6 +115,9 @@ QtObject {
     function stopPlayback() {
         if (midiRenderer.rendering) {
             midiRenderer.cancel()
+        }
+        if (gameMusicRenderer.rendering) {
+            gameMusicRenderer.cancel()
         }
         if (backend) {
             backend.stopPlayback()
@@ -138,9 +151,23 @@ QtObject {
             }
         }
 
+        if (selectedSourceIsGameMusic) {
+            if (gameMusicRenderer.rendering) {
+                var formatLabel = gameMusicRenderer.formatName ? gameMusicRenderer.formatName : qsTr("FM track")
+                return qsTr("Rendering ") + formatLabel + qsTr(" with Game_Music_Emu")
+            }
+            if (gameMusicRenderer.errorString) {
+                return gameMusicRenderer.errorString
+            }
+        }
+
         var baseStatus = backend.statusText
         if (selectedSourceIsMidi && midiRenderer.ready) {
             baseStatus += " • " + qsTr("rendered with FluidSynth")
+        }
+        if (selectedSourceIsGameMusic && gameMusicRenderer.ready) {
+            var readyLabel = gameMusicRenderer.formatName ? gameMusicRenderer.formatName : qsTr("FM track")
+            baseStatus += " • " + readyLabel + qsTr(" via Game_Music_Emu")
         }
         if (analysis.analyzing) {
             return baseStatus + " • " + qsTr("analyzing waveform")
@@ -156,6 +183,22 @@ QtObject {
 
     AudioAnalysis {
         id: analysis
+    }
+
+    GameMusicRenderer {
+        id: gameMusicRenderer
+
+        onReadyChanged: {
+            if (!ready || !musicPlayer.selectedSourceIsGameMusic) {
+                return
+            }
+
+            if (source !== musicPlayer.normalizedLocalPath(musicPlayer.selectedSource)) {
+                return
+            }
+
+            musicPlayer.openPlaybackSource(outputUrl)
+        }
     }
 
     MidiRenderer {

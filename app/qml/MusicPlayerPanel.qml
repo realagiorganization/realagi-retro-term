@@ -109,7 +109,7 @@ Pane {
         Label {
             Layout.fillWidth: true
             wrapMode: Text.WordWrap
-            text: qsTr("MP3 playback now shares waveform-driven visuals with a FluidSynth MIDI render path. FM backends still need a dedicated engine.")
+            text: qsTr("FluidSynth MIDI playback now shares the panel with a Game_Music_Emu Sega FM path for GYM and VGM/VGZ tracks. Dedicated chip-native FM engines can still replace the libgme render path later.")
             color: Qt.rgba(appSettings.fontColor.r, appSettings.fontColor.g, appSettings.fontColor.b, 0.6)
             visible: player !== null
         }
@@ -119,7 +119,7 @@ Pane {
         id: audioFileDialog
         title: qsTr("Open Audio File")
         nameFilters: [
-            qsTr("Audio files (*.mp3 *.wav *.ogg *.flac *.m4a *.mid *.midi)"),
+            qsTr("Audio and game music files (*.mp3 *.wav *.ogg *.flac *.m4a *.mid *.midi *.vgm *.vgz *.gym)"),
             qsTr("All files (*)")
         ]
         onAccepted: if (player) player.openSource(selectedFile)
