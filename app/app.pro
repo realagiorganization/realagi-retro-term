@@ -1,4 +1,4 @@
-QT += qml quick widgets sql quickcontrols2
+QT += qml quick widgets sql quickcontrols2 concurrent
 TARGET = realagi-retro-term
 APP_VERSION = $$system(git -C $$PWD/.. describe --tags --always --dirty=-dirty)
 isEmpty(APP_VERSION): APP_VERSION = "unknown"
@@ -6,6 +6,7 @@ DEFINES += APP_VERSION=\\\"$$APP_VERSION\\\"
 
 # TODO: When migrating to CMake, use KDSingleApplication's CMakeLists.txt instead of these manual sources.
 INCLUDEPATH += $$PWD/../KDSingleApplication/src
+INCLUDEPATH += $$PWD/../third_party/ymfm/src $$PWD/../third_party/ymfm/examples/vgmrender
 HEADERS += \
     $$PWD/../KDSingleApplication/src/kdsingleapplication.h \
     $$PWD/../KDSingleApplication/src/kdsingleapplication_lib.h \
@@ -22,14 +23,26 @@ HEADERS += \
     fileio.h \
     fontmanager.h \
     fontlistmodel.h \
-    midirenderer.h
+    midirenderer.h \
+    ymfmrenderer.h \
+    $$PWD/../third_party/ymfm/examples/vgmrender/vgmrender.h
 
 SOURCES += main.cpp \
     audioanalysis.cpp \
     fileio.cpp \
     fontmanager.cpp \
     fontlistmodel.cpp \
-    midirenderer.cpp
+    midirenderer.cpp \
+    ymfmrenderer.cpp \
+    $$PWD/../third_party/ymfm/examples/vgmrender/em_inflate.cpp \
+    $$PWD/../third_party/ymfm/examples/vgmrender/vgmrender.cpp \
+    $$PWD/../third_party/ymfm/src/ymfm_adpcm.cpp \
+    $$PWD/../third_party/ymfm/src/ymfm_misc.cpp \
+    $$PWD/../third_party/ymfm/src/ymfm_opl.cpp \
+    $$PWD/../third_party/ymfm/src/ymfm_opm.cpp \
+    $$PWD/../third_party/ymfm/src/ymfm_opn.cpp \
+    $$PWD/../third_party/ymfm/src/ymfm_pcm.cpp \
+    $$PWD/../third_party/ymfm/src/ymfm_ssg.cpp
 
 macx:ICON = icons/crt.icns
 

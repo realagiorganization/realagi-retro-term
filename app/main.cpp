@@ -23,6 +23,7 @@
 #include <fontlistmodel.h>
 #include <fontmanager.h>
 #include <midirenderer.h>
+#include <ymfmrenderer.h>
 
 #if defined(Q_OS_MAC)
 #include <CoreFoundation/CoreFoundation.h>
@@ -106,6 +107,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<AudioAnalysis>("RealagiRetroTerm", 1, 0, "AudioAnalysis");
     qmlRegisterType<FontManager>("RealagiRetroTerm", 1, 0, "FontManager");
     qmlRegisterType<MidiRenderer>("RealagiRetroTerm", 1, 0, "MidiRenderer");
+    qmlRegisterType<YmfmRenderer>("RealagiRetroTerm", 1, 0, "YmfmRenderer");
     qmlRegisterUncreatableType<FontListModel>("RealagiRetroTerm", 1, 0, "FontListModel", "FontListModel is created by FontManager");
 
 #if !defined(Q_OS_MAC)

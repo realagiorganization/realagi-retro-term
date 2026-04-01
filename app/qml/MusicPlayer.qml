@@ -9,6 +9,7 @@ QtObject {
     property string backendError: ""
     property url selectedSource: ""
     readonly property bool selectedSourceIsMidi: midiRenderer.isMidiFile(selectedSource)
+    readonly property bool selectedSourceIsVgm: ymfmRenderer.isVgmFile(selectedSource)
     readonly property bool backendAvailable: backend !== null
     readonly property bool hasSource: backend ? backend.hasSource : false
     readonly property bool isPlaying: backend ? backend.isPlaying : false
@@ -85,11 +86,22 @@ QtObject {
             if (backend && backend.clearSource) {
                 backend.clearSource()
             }
+            ymfmRenderer.reset()
             midiRenderer.render(selectedFile)
             return
         }
 
         midiRenderer.reset()
+
+        if (selectedSourceIsVgm) {
+            if (backend && backend.clearSource) {
+                backend.clearSource()
+            }
+            ymfmRenderer.render(selectedFile)
+            return
+        }
+
+        ymfmRenderer.reset()
 
         if (backend) {
             openPlaybackSource(selectedFile)
@@ -105,6 +117,9 @@ QtObject {
     function stopPlayback() {
         if (midiRenderer.rendering) {
             midiRenderer.cancel()
+        }
+        if (ymfmRenderer.rendering) {
+            ymfmRenderer.cancel()
         }
         if (backend) {
             backend.stopPlayback()
@@ -138,9 +153,24 @@ QtObject {
             }
         }
 
+        if (selectedSourceIsVgm) {
+            if (ymfmRenderer.rendering) {
+                return qsTr("Rendering VGM/VGZ with ymfm")
+            }
+            if (ymfmRenderer.errorString) {
+                return ymfmRenderer.errorString
+            }
+        }
+
         var baseStatus = backend.statusText
         if (selectedSourceIsMidi && midiRenderer.ready) {
             baseStatus += " • " + qsTr("rendered with FluidSynth")
+        }
+        if (selectedSourceIsVgm && ymfmRenderer.ready) {
+            baseStatus += " • " + qsTr("rendered with ymfm")
+            if (ymfmRenderer.systemName) {
+                baseStatus += " • " + ymfmRenderer.systemName
+            }
         }
         if (analysis.analyzing) {
             return baseStatus + " • " + qsTr("analyzing waveform")
@@ -163,6 +193,22 @@ QtObject {
 
         onReadyChanged: {
             if (!ready || !musicPlayer.selectedSourceIsMidi) {
+                return
+            }
+
+            if (source !== musicPlayer.normalizedLocalPath(musicPlayer.selectedSource)) {
+                return
+            }
+
+            musicPlayer.openPlaybackSource(outputUrl)
+        }
+    }
+
+    YmfmRenderer {
+        id: ymfmRenderer
+
+        onReadyChanged: {
+            if (!ready || !musicPlayer.selectedSourceIsVgm) {
                 return
             }
 
