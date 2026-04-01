@@ -85,6 +85,7 @@ jobs:
 
   release:
     name: Create Release
+    if: startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-22.04
     needs:
       - build-appimage
@@ -106,23 +107,7 @@ jobs:
           name: realagi-retro-term-dmg
           path: ./release
 
-      - name: Update rolling tag
-        if: startsWith(github.ref, 'refs/heads/')
-        run: |
-          git tag -f rolling
-          git push -f origin rolling
-
-      - name: Publish rolling release
-        if: startsWith(github.ref, 'refs/heads/')
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: rolling
-          name: Rolling Release
-          prerelease: true
-          files: ./release/*
-
       - name: Publish tagged release
-        if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{ github.ref_name }}
