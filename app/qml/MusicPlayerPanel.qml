@@ -109,7 +109,7 @@ Pane {
         Label {
             Layout.fillWidth: true
             wrapMode: Text.WordWrap
-            text: qsTr("Phase 1: local MP3-style playback with shader-reactive CRT effects. MIDI and FM backends are planned separately.")
+            text: qsTr("Phase 1 now includes real file-derived waveform analysis through ffmpeg. MIDI and FM backends are planned separately.")
             color: Qt.rgba(appSettings.fontColor.r, appSettings.fontColor.g, appSettings.fontColor.b, 0.6)
             visible: player !== null
         }

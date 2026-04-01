@@ -18,11 +18,13 @@ DEFINES += KDSINGLEAPPLICATION_STATIC_BUILD
 DESTDIR = $$OUT_PWD/../
 
 HEADERS += \
+    audioanalysis.h \
     fileio.h \
     fontmanager.h \
     fontlistmodel.h
 
 SOURCES += main.cpp \
+    audioanalysis.cpp \
     fileio.cpp \
     fontmanager.cpp \
     fontlistmodel.cpp

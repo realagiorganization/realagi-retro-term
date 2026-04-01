@@ -1,4 +1,5 @@
 import QtQuick
+import RealagiRetroTerm 1.0
 
 QtObject {
     id: musicPlayer
@@ -6,6 +7,7 @@ QtObject {
     property var timeDriver: null
     property QtObject backend: null
     property string backendError: ""
+    property url selectedSource: ""
     readonly property bool backendAvailable: backend !== null
     readonly property bool hasSource: backend ? backend.hasSource : false
     readonly property bool isPlaying: backend ? backend.isPlaying : false
@@ -13,11 +15,27 @@ QtObject {
     readonly property real positionSeconds: backend ? backend.positionSeconds : 0
     readonly property real durationSeconds: backend ? backend.durationSeconds : 0
     readonly property real volume: backend ? backend.volume : 0.7
-    readonly property string trackName: backend ? backend.trackName : qsTr("No audio loaded")
-    readonly property string statusText: backend ? backend.statusText : backendError
-    readonly property real visualizerLevel: backend ? backend.visualizerLevel : 0
-    readonly property real visualizerPulse: backend ? backend.visualizerPulse : 0
-    readonly property real visualizerSweep: backend ? backend.visualizerSweep : 0
+    readonly property string trackName: backend ? backend.trackName : displayName(selectedSource)
+    readonly property string statusText: currentStatusText()
+    readonly property real visualizerLevel: analysis.ready ? analysis.levelAt(positionSeconds) : (backend ? backend.visualizerLevel : 0)
+    readonly property real visualizerPulse: analysis.ready ? analysis.pulseAt(positionSeconds) : (backend ? backend.visualizerPulse : 0)
+    readonly property real visualizerSweep: analysis.ready ? analysis.sweepAt(positionSeconds) : (backend ? backend.visualizerSweep : 0)
+
+    function displayName(sourceUrl) {
+        var rawUrl = sourceUrl ? sourceUrl.toString() : ""
+        if (!rawUrl) {
+            return qsTr("No audio loaded")
+        }
+
+        var normalized = rawUrl
+        if (normalized.indexOf("file://") === 0) {
+            normalized = normalized.substring(7)
+        }
+
+        var segments = normalized.split("/")
+        var lastSegment = segments.length > 0 ? segments[segments.length - 1] : normalized
+        return decodeURIComponent(lastSegment || normalized)
+    }
 
     function initializeBackend() {
         var component = Qt.createComponent("MusicBackendQtMultimedia.qml")
@@ -27,10 +45,17 @@ QtObject {
             return
         }
 
-        backendError = component.errorString()
+        backendError = qsTr("QtMultimedia playback backend is unavailable on this system.")
     }
 
     function openSource(selectedFile) {
+        if (!selectedFile) {
+            return
+        }
+
+        selectedSource = selectedFile
+        analysis.analyze(selectedFile)
+
         if (backend) {
             backend.openSource(selectedFile)
         }
@@ -59,6 +84,28 @@ QtObject {
             return backend.formatDuration(seconds)
         }
         return "00:00"
+    }
+
+    function currentStatusText() {
+        if (!backendAvailable) {
+            return backendError
+        }
+
+        var baseStatus = backend.statusText
+        if (analysis.analyzing) {
+            return baseStatus + " • " + qsTr("analyzing waveform")
+        }
+        if (analysis.ready) {
+            return baseStatus + " • " + qsTr("waveform ready")
+        }
+        if (analysis.errorString) {
+            return baseStatus + " • " + qsTr("visualizer fallback")
+        }
+        return baseStatus
+    }
+
+    AudioAnalysis {
+        id: analysis
     }
 
     Component.onCompleted: initializeBackend()

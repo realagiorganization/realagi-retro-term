@@ -18,6 +18,7 @@
 
 #include <QLoggingCategory>
 
+#include <audioanalysis.h>
 #include <fileio.h>
 #include <fontlistmodel.h>
 #include <fontmanager.h>
@@ -101,6 +102,7 @@ int main(int argc, char *argv[])
     QQmlApplicationEngine engine;
     FileIO fileIO;
 
+    qmlRegisterType<AudioAnalysis>("RealagiRetroTerm", 1, 0, "AudioAnalysis");
     qmlRegisterType<FontManager>("RealagiRetroTerm", 1, 0, "FontManager");
     qmlRegisterUncreatableType<FontListModel>("RealagiRetroTerm", 1, 0, "FontListModel", "FontListModel is created by FontManager");
 
