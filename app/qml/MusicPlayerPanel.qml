@@ -109,7 +109,7 @@ Pane {
         Label {
             Layout.fillWidth: true
             wrapMode: Text.WordWrap
-            text: qsTr("MP3 playback now shares waveform-driven visuals with FluidSynth MIDI rendering and a repo-native ymfm VGM/VGZ synth path.")
+            text: qsTr("MP3 playback now shares waveform-driven visuals with FluidSynth MIDI rendering and a repo-native ymfm VGM/VGZ/GYM synth path.")
             color: Qt.rgba(appSettings.fontColor.r, appSettings.fontColor.g, appSettings.fontColor.b, 0.6)
             visible: player !== null
         }
@@ -119,7 +119,7 @@ Pane {
         id: audioFileDialog
         title: qsTr("Open Audio File")
         nameFilters: [
-            qsTr("Audio files (*.mp3 *.wav *.ogg *.flac *.m4a *.mid *.midi *.vgm *.vgz)"),
+            qsTr("Audio files (*.mp3 *.wav *.ogg *.flac *.m4a *.mid *.midi *.vgm *.vgz *.gym)"),
             qsTr("All files (*)")
         ]
         onAccepted: if (player) player.openSource(selectedFile)

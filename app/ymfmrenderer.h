@@ -43,7 +43,7 @@ public:
     QString formatName() const;
     QString systemName() const;
 
-    Q_INVOKABLE bool isVgmFile(const QUrl &sourceUrl) const;
+    Q_INVOKABLE bool isYmfmFile(const QUrl &sourceUrl) const;
     Q_INVOKABLE void render(const QUrl &sourceUrl);
     Q_INVOKABLE void cancel();
     Q_INVOKABLE void reset();

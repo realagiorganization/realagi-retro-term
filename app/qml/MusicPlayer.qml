@@ -9,7 +9,7 @@ QtObject {
     property string backendError: ""
     property url selectedSource: ""
     readonly property bool selectedSourceIsMidi: midiRenderer.isMidiFile(selectedSource)
-    readonly property bool selectedSourceIsVgm: ymfmRenderer.isVgmFile(selectedSource)
+    readonly property bool selectedSourceIsYmfm: ymfmRenderer.isYmfmFile(selectedSource)
     readonly property bool backendAvailable: backend !== null
     readonly property bool hasSource: backend ? backend.hasSource : false
     readonly property bool isPlaying: backend ? backend.isPlaying : false
@@ -93,7 +93,7 @@ QtObject {
 
         midiRenderer.reset()
 
-        if (selectedSourceIsVgm) {
+        if (selectedSourceIsYmfm) {
             if (backend && backend.clearSource) {
                 backend.clearSource()
             }
@@ -153,9 +153,9 @@ QtObject {
             }
         }
 
-        if (selectedSourceIsVgm) {
+        if (selectedSourceIsYmfm) {
             if (ymfmRenderer.rendering) {
-                return qsTr("Rendering VGM/VGZ with ymfm")
+                return qsTr("Rendering YMFM track")
             }
             if (ymfmRenderer.errorString) {
                 return ymfmRenderer.errorString
@@ -166,7 +166,7 @@ QtObject {
         if (selectedSourceIsMidi && midiRenderer.ready) {
             baseStatus += " • " + qsTr("rendered with FluidSynth")
         }
-        if (selectedSourceIsVgm && ymfmRenderer.ready) {
+        if (selectedSourceIsYmfm && ymfmRenderer.ready) {
             baseStatus += " • " + qsTr("rendered with ymfm")
             if (ymfmRenderer.systemName) {
                 baseStatus += " • " + ymfmRenderer.systemName
@@ -208,7 +208,7 @@ QtObject {
         id: ymfmRenderer
 
         onReadyChanged: {
-            if (!ready || !musicPlayer.selectedSourceIsVgm) {
+            if (!ready || !musicPlayer.selectedSourceIsYmfm) {
                 return
             }
 
