@@ -27,6 +27,7 @@ public:
     int sampleRate() const;
 
     Q_INVOKABLE void analyze(const QUrl &sourceUrl);
+    Q_INVOKABLE void reset();
     Q_INVOKABLE qreal levelAt(qreal seconds) const;
     Q_INVOKABLE qreal pulseAt(qreal seconds) const;
     Q_INVOKABLE qreal sweepAt(qreal seconds) const;

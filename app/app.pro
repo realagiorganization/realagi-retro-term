@@ -21,13 +21,15 @@ HEADERS += \
     audioanalysis.h \
     fileio.h \
     fontmanager.h \
-    fontlistmodel.h
+    fontlistmodel.h \
+    midirenderer.h
 
 SOURCES += main.cpp \
     audioanalysis.cpp \
     fileio.cpp \
     fontmanager.cpp \
-    fontlistmodel.cpp
+    fontlistmodel.cpp \
+    midirenderer.cpp
 
 macx:ICON = icons/crt.icns
 

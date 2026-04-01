@@ -102,6 +102,20 @@ void AudioAnalysis::analyze(const QUrl &sourceUrl)
     }
 }
 
+void AudioAnalysis::reset()
+{
+    stopRunningProcess();
+    clearAnalysis();
+    setAnalyzing(false);
+    setReady(false);
+    setErrorString(QString());
+
+    if (!m_source.isEmpty()) {
+        m_source.clear();
+        emit sourceChanged();
+    }
+}
+
 qreal AudioAnalysis::levelAt(qreal seconds) const
 {
     const int index = indexForSeconds(seconds);

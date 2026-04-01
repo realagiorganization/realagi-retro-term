@@ -100,6 +100,11 @@ QtObject {
         mediaPlayer.play()
     }
 
+    function clearSource() {
+        mediaPlayer.stop()
+        mediaPlayer.source = ""
+    }
+
     function togglePlayback() {
         if (!hasSource) {
             return

@@ -8,6 +8,7 @@ QtObject {
     property QtObject backend: null
     property string backendError: ""
     property url selectedSource: ""
+    readonly property bool selectedSourceIsMidi: midiRenderer.isMidiFile(selectedSource)
     readonly property bool backendAvailable: backend !== null
     readonly property bool hasSource: backend ? backend.hasSource : false
     readonly property bool isPlaying: backend ? backend.isPlaying : false
@@ -15,7 +16,9 @@ QtObject {
     readonly property real positionSeconds: backend ? backend.positionSeconds : 0
     readonly property real durationSeconds: backend ? backend.durationSeconds : 0
     readonly property real volume: backend ? backend.volume : 0.7
-    readonly property string trackName: backend ? backend.trackName : displayName(selectedSource)
+    readonly property string trackName: selectedSource.toString() !== ""
+                                         ? displayName(selectedSource)
+                                         : (backend ? backend.trackName : displayName(selectedSource))
     readonly property string statusText: currentStatusText()
     readonly property real visualizerLevel: analysis.ready ? analysis.levelAt(positionSeconds) : (backend ? backend.visualizerLevel : 0)
     readonly property real visualizerPulse: analysis.ready ? analysis.pulseAt(positionSeconds) : (backend ? backend.visualizerPulse : 0)
@@ -37,6 +40,28 @@ QtObject {
         return decodeURIComponent(lastSegment || normalized)
     }
 
+    function normalizedLocalPath(sourceUrl) {
+        if (!sourceUrl) {
+            return ""
+        }
+
+        var rawUrl = sourceUrl.toString()
+        if (!rawUrl) {
+            return ""
+        }
+
+        return rawUrl.indexOf("file://") === 0 ? rawUrl.substring(7) : rawUrl
+    }
+
+    function openPlaybackSource(playbackSource) {
+        if (!backend || !playbackSource) {
+            return
+        }
+
+        analysis.analyze(playbackSource)
+        backend.openSource(playbackSource)
+    }
+
     function initializeBackend() {
         var component = Qt.createComponent("MusicBackendQtMultimedia.qml")
         if (component.status === Component.Ready) {
@@ -54,10 +79,20 @@ QtObject {
         }
 
         selectedSource = selectedFile
-        analysis.analyze(selectedFile)
+        analysis.reset()
+
+        if (selectedSourceIsMidi) {
+            if (backend && backend.clearSource) {
+                backend.clearSource()
+            }
+            midiRenderer.render(selectedFile)
+            return
+        }
+
+        midiRenderer.reset()
 
         if (backend) {
-            backend.openSource(selectedFile)
+            openPlaybackSource(selectedFile)
         }
     }
 
@@ -68,6 +103,9 @@ QtObject {
     }
 
     function stopPlayback() {
+        if (midiRenderer.rendering) {
+            midiRenderer.cancel()
+        }
         if (backend) {
             backend.stopPlayback()
         }
@@ -91,7 +129,19 @@ QtObject {
             return backendError
         }
 
+        if (selectedSourceIsMidi) {
+            if (midiRenderer.rendering) {
+                return qsTr("Rendering MIDI with FluidSynth")
+            }
+            if (midiRenderer.errorString) {
+                return midiRenderer.errorString
+            }
+        }
+
         var baseStatus = backend.statusText
+        if (selectedSourceIsMidi && midiRenderer.ready) {
+            baseStatus += " • " + qsTr("rendered with FluidSynth")
+        }
         if (analysis.analyzing) {
             return baseStatus + " • " + qsTr("analyzing waveform")
         }
@@ -106,6 +156,22 @@ QtObject {
 
     AudioAnalysis {
         id: analysis
+    }
+
+    MidiRenderer {
+        id: midiRenderer
+
+        onReadyChanged: {
+            if (!ready || !musicPlayer.selectedSourceIsMidi) {
+                return
+            }
+
+            if (source !== musicPlayer.normalizedLocalPath(musicPlayer.selectedSource)) {
+                return
+            }
+
+            musicPlayer.openPlaybackSource(outputUrl)
+        }
     }
 
     Component.onCompleted: initializeBackend()

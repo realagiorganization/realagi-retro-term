@@ -109,7 +109,7 @@ Pane {
         Label {
             Layout.fillWidth: true
             wrapMode: Text.WordWrap
-            text: qsTr("Phase 1 now includes real file-derived waveform analysis through ffmpeg. MIDI and FM backends are planned separately.")
+            text: qsTr("MP3 playback now shares waveform-driven visuals with a FluidSynth MIDI render path. FM backends still need a dedicated engine.")
             color: Qt.rgba(appSettings.fontColor.r, appSettings.fontColor.g, appSettings.fontColor.b, 0.6)
             visible: player !== null
         }
@@ -119,7 +119,7 @@ Pane {
         id: audioFileDialog
         title: qsTr("Open Audio File")
         nameFilters: [
-            qsTr("Audio files (*.mp3 *.wav *.ogg *.flac *.m4a)"),
+            qsTr("Audio files (*.mp3 *.wav *.ogg *.flac *.m4a *.mid *.midi)"),
             qsTr("All files (*)")
         ]
         onAccepted: if (player) player.openSource(selectedFile)
