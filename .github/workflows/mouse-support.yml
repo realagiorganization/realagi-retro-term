@@ -1,0 +1,26 @@
+name: Mouse Support
+
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+
+jobs:
+  mouse-bdd:
+    name: Dockerized mouse BDD
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+
+      - name: Run Dockerized mouse tests
+        run: |
+          ./scripts/run-mouse-bdd-docker.sh
+
+      - name: Upload mouse test artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mouse-bdd-artifacts
+          path: build/mouse-bdd-artifacts

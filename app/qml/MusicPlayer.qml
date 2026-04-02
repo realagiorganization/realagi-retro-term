@@ -184,11 +184,11 @@ QtObject {
         return baseStatus
     }
 
-    AudioAnalysis {
+    property AudioAnalysis analysis: AudioAnalysis {
         id: analysis
     }
 
-    MidiRenderer {
+    property MidiRenderer midiRenderer: MidiRenderer {
         id: midiRenderer
 
         onReadyChanged: {
@@ -204,7 +204,7 @@ QtObject {
         }
     }
 
-    YmfmRenderer {
+    property YmfmRenderer ymfmRenderer: YmfmRenderer {
         id: ymfmRenderer
 
         onReadyChanged: {

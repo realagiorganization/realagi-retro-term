@@ -17,6 +17,7 @@
 #include <stdlib.h>
 
 #include <QLoggingCategory>
+#include <memory>
 
 #include <audioanalysis.h>
 #include <fileio.h>
@@ -93,12 +94,18 @@ int main(int argc, char *argv[])
     app.setOrganizationDomain(QStringLiteral("realagi-retro-term"));
     app.setApplicationVersion(appVersion);
 
-    KDSingleApplication singleApp(QStringLiteral("realagi-retro-term"));
+    const QByteArray disableSingleInstanceEnv = qgetenv("REALAGI_RETRO_TERM_DISABLE_SINGLE_INSTANCE");
+    const bool disableSingleInstance = !disableSingleInstanceEnv.isEmpty() && disableSingleInstanceEnv != "0";
 
-    if (!singleApp.isPrimaryInstance()) {
-        if (singleApp.sendMessage("new-window"))
-            return 0;
-        qWarning() << "KDSingleApplication: primary not reachable, continuing as independent instance.";
+    std::unique_ptr<KDSingleApplication> singleApp;
+    if (!disableSingleInstance) {
+        singleApp = std::make_unique<KDSingleApplication>(QStringLiteral("realagi-retro-term"));
+
+        if (!singleApp->isPrimaryInstance()) {
+            if (singleApp->sendMessage("new-window"))
+                return 0;
+            qWarning() << "KDSingleApplication: primary not reachable, continuing as independent instance.";
+        }
     }
 
     QQmlApplicationEngine engine;
@@ -161,11 +168,13 @@ int main(int argc, char *argv[])
         QMetaObject::invokeMethod(rootObject, "createWindow", Qt::QueuedConnection);
     };
 
-    QObject::connect(&singleApp, &KDSingleApplication::messageReceived, &app,
-                     [&requestNewWindow](const QByteArray &message) {
-        if (message.isEmpty() || message == QByteArray("new-window"))
-            requestNewWindow();
-    });
+    if (singleApp) {
+        QObject::connect(singleApp.get(), &KDSingleApplication::messageReceived, &app,
+                         [&requestNewWindow](const QByteArray &message) {
+            if (message.isEmpty() || message == QByteArray("new-window"))
+                requestNewWindow();
+        });
+    }
 
 #if defined(Q_OS_MAC)
     QMenu *dockMenu = new QMenu(nullptr);
