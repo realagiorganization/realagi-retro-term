@@ -157,8 +157,16 @@ def _launch_fixture(context, fixture_name: str) -> None:
 
 def _tmux_panes(context) -> dict[str, dict[str, int | str]]:
     panes_path = _wait_for_path(context.scenario_dir / "tmux-panes.txt", timeout_seconds=10)
+    deadline = time.time() + 10
+    lines: list[str] = []
+    while time.time() < deadline:
+        text = panes_path.read_text(encoding="utf-8").strip()
+        lines = text.splitlines() if text else []
+        if len(lines) >= 2:
+            break
+        time.sleep(0.1)
+
     panes: dict[str, dict[str, int | str]] = {}
-    lines = _read_text(panes_path).splitlines()
     if len(lines) < 2:
         raise AssertionError(f"Expected at least two tmux panes, got: {lines!r}")
 
@@ -182,10 +190,15 @@ def _tmux_panes(context) -> dict[str, dict[str, int | str]]:
 
 def _active_tmux_pane_id(context) -> str:
     active_path = _wait_for_path(context.scenario_dir / "tmux-active-pane.txt", timeout_seconds=10)
-    for line in _read_text(active_path).splitlines():
-        active_flag, pane_id = line.split()
-        if active_flag == "1":
-            return pane_id
+    deadline = time.time() + 10
+    while time.time() < deadline:
+        text = active_path.read_text(encoding="utf-8").strip()
+        if text:
+            for line in text.splitlines():
+                active_flag, pane_id = line.split()
+                if active_flag == "1":
+                    return pane_id
+        time.sleep(0.1)
     raise AssertionError(f"No active pane found in {active_path}")
 
 
