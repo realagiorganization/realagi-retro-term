@@ -9,6 +9,7 @@
         <file>SettingsGeneralTab.qml</file>
         <file>PreprocessedTerminal.qml</file>
         <file>TimeManager.qml</file>
+        <file>IosWindow.qml</file>
         <file>MusicPlayer.qml</file>
         <file>MusicBackendQtMultimedia.qml</file>
         <file>MusicPlayerPanel.qml</file>
@@ -18,6 +19,7 @@
         <file>InsertNameDialog.qml</file>
         <file>SettingsEffectsTab.qml</file>
         <file>main.qml</file>
+        <file>ios_main.qml</file>
         <file>SettingsTerminalTab.qml</file>
         <file>fonts/apple2/PrintChar21.ttf</file>
         <file>fonts/ibm-3278/3270NerdFontMono-Regular.ttf</file>

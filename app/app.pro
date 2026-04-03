@@ -4,17 +4,20 @@ APP_VERSION = $$system(git -C $$PWD/.. describe --tags --always --dirty=-dirty)
 isEmpty(APP_VERSION): APP_VERSION = "unknown"
 DEFINES += APP_VERSION=\\\"$$APP_VERSION\\\"
 
-# TODO: When migrating to CMake, use KDSingleApplication's CMakeLists.txt instead of these manual sources.
-INCLUDEPATH += $$PWD/../KDSingleApplication/src
 INCLUDEPATH += $$PWD/../third_party/ymfm/src $$PWD/../third_party/ymfm/examples/vgmrender
-HEADERS += \
-    $$PWD/../KDSingleApplication/src/kdsingleapplication.h \
-    $$PWD/../KDSingleApplication/src/kdsingleapplication_lib.h \
-    $$PWD/../KDSingleApplication/src/kdsingleapplication_localsocket_p.h
-SOURCES += \
-    $$PWD/../KDSingleApplication/src/kdsingleapplication.cpp \
-    $$PWD/../KDSingleApplication/src/kdsingleapplication_localsocket.cpp
-DEFINES += KDSINGLEAPPLICATION_STATIC_BUILD
+
+!ios {
+    # TODO: When migrating to CMake, use KDSingleApplication's CMakeLists.txt instead of these manual sources.
+    INCLUDEPATH += $$PWD/../KDSingleApplication/src
+    HEADERS += \
+        $$PWD/../KDSingleApplication/src/kdsingleapplication.h \
+        $$PWD/../KDSingleApplication/src/kdsingleapplication_lib.h \
+        $$PWD/../KDSingleApplication/src/kdsingleapplication_localsocket_p.h
+    SOURCES += \
+        $$PWD/../KDSingleApplication/src/kdsingleapplication.cpp \
+        $$PWD/../KDSingleApplication/src/kdsingleapplication_localsocket.cpp
+    DEFINES += KDSINGLEAPPLICATION_STATIC_BUILD
+}
 
 DESTDIR = $$OUT_PWD/../
 

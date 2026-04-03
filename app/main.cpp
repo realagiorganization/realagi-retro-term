@@ -11,7 +11,9 @@
 #include <QQuickStyle>
 #include <QtQml/qqml.h>
 
+#if !defined(Q_OS_IOS)
 #include <kdsingleapplication.h>
+#endif
 
 #include <QDebug>
 #include <stdlib.h>
@@ -26,7 +28,7 @@
 #include <midirenderer.h>
 #include <ymfmrenderer.h>
 
-#if defined(Q_OS_MAC)
+#if defined(Q_OS_MACOS)
 #include <CoreFoundation/CoreFoundation.h>
 #include <QStyleFactory>
 #include <QMenu>
@@ -54,7 +56,7 @@ int main(int argc, char *argv[])
 //     setenv("QSG_RENDER_LOOP", "threaded", 0);
 // #endif
 
-#if defined(Q_OS_MAC)
+#if defined(Q_OS_MACOS)
     // This allows UTF-8 characters usage in OSX.
     setenv("LC_CTYPE", "UTF-8", 1);
 
@@ -88,7 +90,9 @@ int main(int argc, char *argv[])
     }
 
     QApplication app(argc, argv);
+#if defined(Q_OS_MACOS)
     app.setAttribute(Qt::AA_MacDontSwapCtrlAndMeta, true);
+#endif
     app.setApplicationName(QStringLiteral("realagi-retro-term"));
     app.setOrganizationName(QStringLiteral("realagi-retro-term"));
     app.setOrganizationDomain(QStringLiteral("realagi-retro-term"));
@@ -97,6 +101,7 @@ int main(int argc, char *argv[])
     const QByteArray disableSingleInstanceEnv = qgetenv("REALAGI_RETRO_TERM_DISABLE_SINGLE_INSTANCE");
     const bool disableSingleInstance = !disableSingleInstanceEnv.isEmpty() && disableSingleInstanceEnv != "0";
 
+#if !defined(Q_OS_IOS)
     std::unique_ptr<KDSingleApplication> singleApp;
     if (!disableSingleInstance) {
         singleApp = std::make_unique<KDSingleApplication>(QStringLiteral("realagi-retro-term"));
@@ -107,6 +112,7 @@ int main(int argc, char *argv[])
             qWarning() << "KDSingleApplication: primary not reachable, continuing as independent instance.";
         }
     }
+#endif
 
     QQmlApplicationEngine engine;
     FileIO fileIO;
@@ -117,7 +123,7 @@ int main(int argc, char *argv[])
     qmlRegisterType<YmfmRenderer>("RealagiRetroTerm", 1, 0, "YmfmRenderer");
     qmlRegisterUncreatableType<FontListModel>("RealagiRetroTerm", 1, 0, "FontListModel", "FontListModel is created by FontManager");
 
-#if !defined(Q_OS_MAC)
+#if !defined(Q_OS_MACOS)
     app.setWindowIcon(QIcon::fromTheme("realagi-retro-term", QIcon(":../icons/32x32/realagi-retro-term.png")));
 #if defined(Q_OS_LINUX)
     QGuiApplication::setDesktopFileName(QStringLiteral("realagi-retro-term"));
@@ -137,6 +143,12 @@ int main(int argc, char *argv[])
     QVariant command(cmdList.empty() ? QVariant() : cmdList[0]);
     QVariant commandArgs(cmdList.size() <= 1 ? QVariant() : QVariant(cmdList.mid(1)));
     engine.rootContext()->setContextProperty("appVersion", appVersion);
+#if defined(Q_OS_IOS)
+    const bool platformSupportsTerminal = false;
+#else
+    const bool platformSupportsTerminal = true;
+#endif
+    engine.rootContext()->setContextProperty("platformSupportsTerminal", platformSupportsTerminal);
     engine.rootContext()->setContextProperty("defaultCmd", command);
     engine.rootContext()->setContextProperty("defaultCmdArgs", commandArgs);
 
@@ -150,7 +162,12 @@ int main(int argc, char *argv[])
     importPathList.append(QCoreApplication::applicationDirPath() + "/../../../qmltermwidget");
     engine.setImportPathList(importPathList);
 
-    engine.load(QUrl(QStringLiteral ("qrc:/main.qml")));
+#if defined(Q_OS_IOS)
+    const QUrl mainQmlUrl(QStringLiteral("qrc:/ios_main.qml"));
+#else
+    const QUrl mainQmlUrl(QStringLiteral("qrc:/main.qml"));
+#endif
+    engine.load(mainQmlUrl);
 
     if (engine.rootObjects().isEmpty()) {
         qDebug() << "Cannot load QML interface";
@@ -168,6 +185,7 @@ int main(int argc, char *argv[])
         QMetaObject::invokeMethod(rootObject, "createWindow", Qt::QueuedConnection);
     };
 
+#if !defined(Q_OS_IOS)
     if (singleApp) {
         QObject::connect(singleApp.get(), &KDSingleApplication::messageReceived, &app,
                          [&requestNewWindow](const QByteArray &message) {
@@ -175,8 +193,9 @@ int main(int argc, char *argv[])
                 requestNewWindow();
         });
     }
+#endif
 
-#if defined(Q_OS_MAC)
+#if defined(Q_OS_MACOS)
     QMenu *dockMenu = new QMenu(nullptr);
     dockMenu->addAction(QObject::tr("New Window"), [&requestNewWindow]() { requestNewWindow(); });
     dockMenu->setAsDockMenu();

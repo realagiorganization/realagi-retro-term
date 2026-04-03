@@ -2,7 +2,7 @@ TEMPLATE = subdirs
 
 CONFIG += ordered
 
-SUBDIRS += qmltermwidget
+!ios:SUBDIRS += qmltermwidget
 SUBDIRS += app
 
 desktop.files += realagi-retro-term.desktop
