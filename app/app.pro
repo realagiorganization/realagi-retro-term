@@ -1,4 +1,7 @@
-QT += qml quick widgets sql quickcontrols2 concurrent
+QT += qml quick sql quickcontrols2 concurrent
+!ios: QT += widgets
+ios: LIBS -= -framework OpenGL
+ios: QTPLUGIN += qios
 TARGET = realagi-retro-term
 APP_VERSION = $$system(git -C $$PWD/.. describe --tags --always --dirty=-dirty)
 isEmpty(APP_VERSION): APP_VERSION = "unknown"

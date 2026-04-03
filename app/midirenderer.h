@@ -3,9 +3,11 @@
 
 #include <QObject>
 #include <QByteArray>
-#include <QProcess>
 #include <QString>
 #include <QUrl>
+#ifndef Q_OS_IOS
+#include <QProcess>
+#endif
 
 class MidiRenderer : public QObject
 {
@@ -52,7 +54,9 @@ private:
     void setSoundFontPath(const QString &soundFontPath);
     void stopRunningProcess();
 
+#ifndef Q_OS_IOS
     QProcess m_process;
+#endif
     QByteArray m_errorBytes;
     QString m_errorString;
     QString m_pendingOutputPath;

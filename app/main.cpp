@@ -1,15 +1,17 @@
-#include <QtQml/QQmlApplicationEngine>
-#include <QtGui/QGuiApplication>
-
+#include <QQmlApplicationEngine>
+#include <QGuiApplication>
 #include <QQmlContext>
 #include <QStringList>
 
 #include <QDir>
 
-#include <QtWidgets/QApplication>
 #include <QIcon>
 #include <QQuickStyle>
-#include <QtQml/qqml.h>
+#include <qqml.h>
+
+#if !defined(Q_OS_IOS)
+#include <QApplication>
+#endif
 
 #if !defined(Q_OS_IOS)
 #include <kdsingleapplication.h>
@@ -89,7 +91,11 @@ int main(int argc, char *argv[])
         return 0;
     }
 
+#if defined(Q_OS_IOS)
+    QGuiApplication app(argc, argv);
+#else
     QApplication app(argc, argv);
+#endif
 #if defined(Q_OS_MACOS)
     app.setAttribute(Qt::AA_MacDontSwapCtrlAndMeta, true);
 #endif

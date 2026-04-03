@@ -90,7 +90,7 @@ ApplicationWindow {
                     Label {
                         Layout.fillWidth: true
                         wrapMode: Text.WordWrap
-                        text: qsTr("This build keeps the shared QML settings, shaders, audio analysis, Qt Multimedia playback, MIDI renderer, and YMFM renderer alive. The desktop-only terminal path is intentionally fenced off for now.")
+                        text: qsTr("This build keeps the shared QML settings, shaders, Qt Multimedia playback, and the iOS shell alive. Process-driven ffmpeg analysis, FluidSynth MIDI rendering, and the desktop terminal path are intentionally fenced off on iOS for now.")
                         color: Qt.rgba(appSettings.fontColor.r, appSettings.fontColor.g, appSettings.fontColor.b, 0.82)
                     }
 

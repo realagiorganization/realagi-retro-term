@@ -3,10 +3,12 @@
 
 #include <QObject>
 #include <QByteArray>
-#include <QProcess>
 #include <QString>
 #include <QUrl>
 #include <QVector>
+#ifndef Q_OS_IOS
+#include <QProcess>
+#endif
 
 class AudioAnalysis : public QObject
 {
@@ -49,7 +51,9 @@ private:
     void setErrorString(const QString &errorString);
     void stopRunningProcess();
 
+#ifndef Q_OS_IOS
     QProcess m_process;
+#endif
     QByteArray m_pcmBytes;
     QVector<qreal> m_levels;
     QVector<qreal> m_pulses;

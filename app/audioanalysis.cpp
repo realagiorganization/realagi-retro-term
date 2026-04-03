@@ -8,6 +8,7 @@
 AudioAnalysis::AudioAnalysis(QObject *parent)
     : QObject(parent)
 {
+#ifndef Q_OS_IOS
     m_process.setProcessChannelMode(QProcess::SeparateChannels);
 
     connect(&m_process, &QProcess::readyReadStandardOutput, this, [this]() {
@@ -39,6 +40,7 @@ AudioAnalysis::AudioAnalysis(QObject *parent)
         setReady(false);
         setErrorString(tr("Unable to start ffmpeg for waveform analysis."));
     });
+#endif
 }
 
 bool AudioAnalysis::analyzing() const
@@ -81,6 +83,12 @@ void AudioAnalysis::analyze(const QUrl &sourceUrl)
         emit sourceChanged();
     }
 
+#ifdef Q_OS_IOS
+    setErrorString(tr("Waveform analysis is unavailable on iOS builds."));
+    setReady(false);
+    setAnalyzing(false);
+    return;
+#else
     setErrorString(QString());
     setReady(false);
     setAnalyzing(true);
@@ -100,6 +108,7 @@ void AudioAnalysis::analyze(const QUrl &sourceUrl)
         setAnalyzing(false);
         setErrorString(tr("Unable to start ffmpeg for waveform analysis."));
     }
+#endif
 }
 
 void AudioAnalysis::reset()
@@ -254,10 +263,12 @@ void AudioAnalysis::setErrorString(const QString &errorStringValue)
 
 void AudioAnalysis::stopRunningProcess()
 {
+#ifndef Q_OS_IOS
     if (m_process.state() == QProcess::NotRunning) {
         return;
     }
 
     m_process.kill();
     m_process.waitForFinished(1000);
+#endif
 }

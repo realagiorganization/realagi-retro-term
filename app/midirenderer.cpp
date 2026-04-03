@@ -9,6 +9,7 @@
 MidiRenderer::MidiRenderer(QObject *parent)
     : QObject(parent)
 {
+#ifndef Q_OS_IOS
     m_process.setProcessChannelMode(QProcess::SeparateChannels);
 
     connect(&m_process, &QProcess::readyReadStandardError, this, [this]() {
@@ -51,6 +52,7 @@ MidiRenderer::MidiRenderer(QObject *parent)
         setReady(false);
         setErrorString(tr("Unable to start FluidSynth for MIDI rendering."));
     });
+#endif
 }
 
 bool MidiRenderer::rendering() const
@@ -105,6 +107,17 @@ void MidiRenderer::render(const QUrl &sourceUrl)
         return;
     }
 
+#ifdef Q_OS_IOS
+    stopRunningProcess();
+    m_errorBytes.clear();
+    setSource(sourcePath);
+    setSoundFontPath(QString());
+    setOutputUrl(QUrl());
+    setReady(false);
+    setRendering(false);
+    setErrorString(tr("MIDI rendering is unavailable on iOS builds."));
+    return;
+#else
     const QString detectedSoundFont = detectSoundFont();
     if (QStandardPaths::findExecutable(QStringLiteral("fluidsynth")).isEmpty()
         || detectedSoundFont.isEmpty()) {
@@ -148,6 +161,7 @@ void MidiRenderer::render(const QUrl &sourceUrl)
         setRendering(false);
         setErrorString(tr("Unable to start FluidSynth for MIDI rendering."));
     }
+#endif
 }
 
 void MidiRenderer::cancel()
@@ -286,10 +300,12 @@ void MidiRenderer::setSoundFontPath(const QString &soundFontPath)
 
 void MidiRenderer::stopRunningProcess()
 {
+#ifndef Q_OS_IOS
     if (m_process.state() == QProcess::NotRunning) {
         return;
     }
 
     m_process.kill();
     m_process.waitForFinished(1000);
+#endif
 }
